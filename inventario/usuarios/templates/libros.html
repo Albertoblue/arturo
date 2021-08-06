@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% block main %}
+{%load bootstrap%}
+<div id="app">
+
+<div class="container mt-4">
+    <div class="row">
+    <div class="col">
+        <h2 class="float-left">Libros</h2>
+    </div>
+    
+    <div class="col text-right">
+        <a @click.prevent="form" class="btn btn-success " data-bs-toggle="tooltip" data-bs-placement="right" title="Agregar nuevo libro"><i class="fas fa-user-plus"></i></a>
+
+    </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+
+    <table class="table ">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Editorial</th>
+                <th>Codigo</th>
+                <th>Escritor</th>
+                <th>Acciones</th>
+            </tr>
+
+
+        </thead>
+
+        <tbody>
+            {%for libro in page_obj.object_list%}
+
+            <tr>
+            <td>{{libro.id}}</td>
+            <td>{{libro.nombre}}</td>
+            <td>{{libro.editorial}}</td>
+            <td>{{libro.codigo}}</td>
+            <td>{{libro.escritor}}</td>
+            <td>
+
+                <a @click.prevent="del" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar {{libro.nombre}}"><i class="fas fa-trash-alt" style="color:white;"></i></a>
+                <a href="{%url 'usuarios:libroEdit' id=libro.id%}"  class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar libro" ><i class="fas fa-user-edit" style="color: white;"></i></a>
+
+
+            </td>
+            </tr>
+
+            {%endfor%}
+        </tbody>
+        
+    </table>
+    
+</div>
+</div>
+
+<div>
+    <!--
+    {% for contact in page_obj %}
+        {# Each "contact" is a Contact model object. #}
+        {{ contact.full_name|upper }}<br>
+        ...
+    {% endfor %}-->
+    
+    <nav class="justify-content-center m3" aria-label="Page navigation example">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+            {% endif %}
+    
+            {% for i in page_obj.paginator.page_range %}
+                    
+                
+                <li {%if i == page_obj.number%} class="page-item active" {%else%} class="page-item" {%endif%}>
+                    <a class="page-link" href="?page={{i}}"> {{i}} </a>
+    
+    
+                </li>
+
+
+            {%endfor%}
+
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <!--
+    <span class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+    </span>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item"><a class="page-link" href="#">2</a></li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item"><a class="page-link" href="#">Next</a></li>
+        </ul>
+    </nav>-->
+
+    <!-- Modal -->
+<div id="modalForm" class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Agregar nuevo libro</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+    <form action="{%url 'usuarios:libroForm' %}" method="POST">
+        {% csrf_token %}
+          {{form|bootstrap}}
+          <input value="Guardar" type="submit" class="btn btn-primary mt-5">
+        </form>
+        </div>
+    </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+{%endblock%}

@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% block main %}
+{%load bootstrap%}
+<div id="app">
+
+<div class="container mt-4">
+    <div class="row">
+    <div class="col">
+        <h2 class="float-left">Libros</h2>
+    </div>
+    
+    <div class="col text-right">
+        <a @click.prevent="form" class="btn btn-success " data-bs-toggle="tooltip" data-bs-placement="right" title="Agregar usuarios"><i class="fas fa-user-plus"></i></a>
+
+    </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+
+    <table class="table ">
+
+        <thead class="table-dark">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Telefono</th>
+                <th>Correo</th>
+                <th>Acciones</th>
+            </tr>
+
+
+        </thead>
+
+        <tbody>
+            {%for libro in page_obj.object_list%}
+
+            <tr>
+            <td>{{libro.id}}</td>
+            <td>{{libro.nombre}}</td>
+            <td>{{libro.telefono}}</td>
+            <td>{{libro.correo}}</td>
+            <td>
+
+                <a @click.prevent="del({{libro.id}},2)" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar usuario"><i class="fas fa-trash-alt" style="color:white;"></i></a>
+                <a href="{%url 'usuarios:libroEdit' id=libro.id%}"  class="btn btn-secondary" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar usuario" ><i class="fas fa-user-edit" style="color: white;"></i></a>
+
+
+            </td>
+            </tr>
+
+            {%endfor%}
+        </tbody>
+
+    </table>
+
+</div>
+</div>
+
+
+
+
+<div>
+
+    <!-- Modal -->
+<div id="modalForm" class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Agregar nuevo autor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+    <form action="{%url 'usuarios:libroEdit' id=id%}" method="POST">
+        {% csrf_token %}
+          {{form|bootstrap}}
+          <input value="Guardar" type="submit" class="btn btn-primary mt-5">
+        </form>
+        </div>
+    </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+{%endblock%}
+
+{%block script%}
+
+<script>
+    document.addEventListener("DOMContentLoaded",function(){
+
+        console.log("Hola Mundo");
+        $('#modalForm').modal('show');
+
+    });
+</script>
+
+{%endblock%}
